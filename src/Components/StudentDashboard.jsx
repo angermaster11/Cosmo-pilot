@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../Config/Config';
 import { motion } from 'framer-motion';
-import { FiLogOut, FiUser, FiCalendar, FiBell, FiAward, FiBook, FiHome, FiClock, FiMapPin, FiMail, FiPhone, FiMap } from 'react-icons/fi';
-import { FaChalkboardTeacher } from 'react-icons/fa';
+import { FiLogOut, FiUser, FiCalendar, FiBell, FiAward, FiBook, FiHome, FiClock, FiMapPin, FiMail, FiPhone, FiMap, FiSearch, FiMessageSquare, FiHelpCircle, FiBookOpen, FiTarget, FiFileText } from 'react-icons/fi';
+import { FaChalkboardTeacher, FaRobot, FaBrain } from 'react-icons/fa';
+import AcademicCopilot from "../Components/AcademicCopilot/AcademicCopilotNew"
+import { SiGooglescholar } from "react-icons/si";
+import { AssignmentList } from "../Components/Assignments";
+import RiskPrediction from "./RiskPrediction/RiskPrediction";
 
 const StudentDashboard = () => {
   const [user, setUser] = useState(null);
@@ -16,6 +20,17 @@ const StudentDashboard = () => {
   const [loadingResults, setLoadingResults] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  // Academic Co-Pilot State
+  const [academicData, setAcademicData] = useState({
+    performanceInsights: [],
+    studyRecommendations: [],
+    resourceSuggestions: [],
+    upcomingDeadlines: [],
+    aiChatMessages: []
+  });
+  const [aiQuery, setAiQuery] = useState('');
+  const [isAiResponding, setIsAiResponding] = useState(false);
 
   // Animation variants
   const cardVariants = {
@@ -27,17 +42,10 @@ const StudentDashboard = () => {
     const fetchNotices = async () => {
       setLoadingNotices(true);
       
+      // Fetch notices without foreign key join (staff_id relationship may not exist)
       const { data, error } = await supabase
         .from('notice')
-        .select(`
-          topic,
-          date,
-          time,
-          description,
-          staff:staff_id (
-            name
-          )
-        `)
+        .select('*')
         .order('date', { ascending: false })
         .order('time', { ascending: false })
         .limit(5);
@@ -46,7 +54,12 @@ const StudentDashboard = () => {
         console.error("Error fetching notices:", error);
         setNotices([]);
       } else {
-        setNotices(data);
+        // Format notices without staff join
+        const formattedNotices = data?.map(notice => ({
+          ...notice,
+          staff: { name: 'Staff' }  // Default staff name since join not available
+        })) || [];
+        setNotices(formattedNotices);
       }
       
       setLoadingNotices(false);
@@ -115,19 +128,30 @@ const StudentDashboard = () => {
       setLoadingSchedule(true);
       const today = new Date().toISOString().split('T')[0];
 
+      // Fetch schedule without foreign key join
       const { data: scheduleData, error } = await supabase
         .from('classes_schedule')
-        .select('*, subjects(subject_name, subject_code)')
-        
+        .select('*');
         // .eq('date', today);
-
-        console.log("Schedule Data:", scheduleData);
 
       if (error) {
         console.error("Error fetching schedule:", error);
         setTodaySchedule([]);
       } else {
-        const sorted = scheduleData.sort((a, b) => a.time.localeCompare(b.time));
+        // Get subjects separately and merge
+        const { data: subjects } = await supabase
+          .from('subjects')
+          .select('subject_id, subject_name, subject_code');
+        
+        const subjectMap = {};
+        subjects?.forEach(s => { subjectMap[s.subject_id] = s; });
+        
+        const enrichedSchedule = scheduleData?.map(schedule => ({
+          ...schedule,
+          subjects: subjectMap[schedule.subject_id] || { subject_name: 'Unknown', subject_code: '' }
+        })) || [];
+        
+        const sorted = enrichedSchedule.sort((a, b) => (a.time || '').localeCompare(b.time || ''));
         setTodaySchedule(sorted);
       }
       setLoadingSchedule(false);
@@ -188,6 +212,170 @@ const StudentDashboard = () => {
     fetchResults();
     fetchSchedule();
   }, [user]);
+
+  // Initialize Academic Co-Pilot Data
+  useEffect(() => {
+    if (user && resultData.length > 0 && Object.keys(attendanceData).length > 0) {
+      generateAcademicInsights();
+    }
+  }, [user, resultData, attendanceData]);
+
+  const generateAcademicInsights = () => {
+    // Generate performance insights
+    const insights = [];
+    
+    // Attendance insights
+    const totalSubjects = Object.keys(attendanceData).length;
+    const lowAttendanceSubjects = Object.entries(attendanceData)
+      .filter(([_, data]) => parseFloat(data.percentage) < 75)
+      .map(([_, data]) => data.subject_name);
+    
+    if (lowAttendanceSubjects.length > 0) {
+      insights.push({
+        type: 'warning',
+        icon: 'attendance',
+        title: 'Low Attendance Alert',
+        message: `You have low attendance in ${lowAttendanceSubjects.length} subject(s). Consider improving your attendance in: ${lowAttendanceSubjects.join(', ')}`,
+        suggestion: 'Try to attend all classes regularly'
+      });
+    }
+
+    // Performance insights from results
+    const lowPerformingSubjects = resultData.filter(res => {
+      const perc = parseFloat(res.percentage || 0);
+      return perc < 60 && perc > 0;
+    });
+
+    if (lowPerformingSubjects.length > 0) {
+      insights.push({
+        type: 'warning',
+        icon: 'performance',
+        title: 'Performance Improvement Needed',
+        message: `You need to improve in ${lowPerformingSubjects.length} subject(s)`,
+        suggestion: 'Focus on understanding core concepts'
+      });
+    }
+
+    // Study recommendations
+    const recommendations = [
+      {
+        id: 1,
+        title: 'Focus on Weak Subjects',
+        description: 'Based on your performance, allocate more study time to subjects with lower grades',
+        priority: 'high',
+        subjects: lowPerformingSubjects.map(s => s.subject_name)
+      },
+      {
+        id: 2,
+        title: 'Regular Revision',
+        description: 'Schedule weekly revision sessions for all subjects',
+        priority: 'medium'
+      },
+      {
+        id: 3,
+        title: 'Practice Problems',
+        description: 'Solve at least 10 practice problems daily for technical subjects',
+        priority: 'high'
+      }
+    ];
+
+    // Resource suggestions
+    const resources = [
+      {
+        id: 1,
+        type: 'online',
+        title: 'Khan Academy - Calculus',
+        description: 'Video tutorials for calculus concepts',
+        link: 'https://www.khanacademy.org/math/calculus-1',
+        subject: 'Mathematics'
+      },
+      {
+        id: 2,
+        type: 'book',
+        title: 'Introduction to Algorithms',
+        description: 'Standard textbook for Data Structures',
+        subject: 'Computer Science'
+      },
+      {
+        id: 3,
+        type: 'practice',
+        title: 'Coding Practice Platform',
+        description: 'LeetCode for programming practice',
+        link: 'https://leetcode.com',
+        subject: 'Programming'
+      }
+    ];
+
+    setAcademicData({
+      performanceInsights: insights,
+      studyRecommendations: recommendations,
+      resourceSuggestions: resources,
+      upcomingDeadlines: [
+        { id: 1, title: 'Project Submission', subject: 'DSA', date: '2024-03-15', priority: 'high' },
+        { id: 2, title: 'Mid-Term Exam', subject: 'Mathematics', date: '2024-03-20', priority: 'high' }
+      ],
+      aiChatMessages: [
+        { id: 1, sender: 'ai', message: 'Hello! I\'m your Academic Co-Pilot. How can I assist you with your studies today?' }
+      ]
+    });
+  };
+
+  const handleAiQuery = async () => {
+    if (!aiQuery.trim()) return;
+
+    // Add user message
+    const userMessage = { id: Date.now(), sender: 'user', message: aiQuery };
+    setAcademicData(prev => ({
+      ...prev,
+      aiChatMessages: [...prev.aiChatMessages, userMessage]
+    }));
+
+    setIsAiResponding(true);
+    setAiQuery('');
+
+    // Simulate AI response (in real implementation, connect to AI API)
+    setTimeout(() => {
+      const aiResponse = {
+        id: Date.now() + 1,
+        sender: 'ai',
+        message: `I've analyzed your query: "${aiQuery}". Based on your academic data, I recommend focusing on regular study sessions and practicing sample questions. Would you like specific guidance on any subject?`
+      };
+      
+      setAcademicData(prev => ({
+        ...prev,
+        aiChatMessages: [...prev.aiChatMessages, aiResponse]
+      }));
+      setIsAiResponding(false);
+    }, 1500);
+  };
+
+  const analyzeStudyPatterns = () => {
+    const analysis = {
+      bestTime: '7-9 PM',
+      mostProductiveDay: 'Saturday',
+      suggestedStudyHours: '3 hours daily',
+      weakAreas: resultData.filter(r => parseFloat(r.percentage || 0) < 70).map(r => r.subject_name)
+    };
+    
+    return analysis;
+  };
+
+  const generateStudyPlan = () => {
+    const studyPlan = {
+      daily: [
+        { time: '7-8 AM', activity: 'Revision of previous day topics' },
+        { time: '4-6 PM', activity: 'New concepts learning' },
+        { time: '8-9 PM', activity: 'Practice problems solving' }
+      ],
+      weekly: [
+        { day: 'Saturday', focus: 'Weak subjects review' },
+        { day: 'Sunday', focus: 'Complete all pending assignments' }
+      ]
+    };
+    
+    alert('Study plan generated! Check the Academic Co-Pilot section for details.');
+    return studyPlan;
+  };
 
   if (!user) {
     return (
@@ -269,6 +457,30 @@ const StudentDashboard = () => {
             <FiAward className="text-lg" />
             {!sidebarCollapsed && <span className="ml-3">Results</span>}
           </button>
+          
+          <button
+            onClick={() => setActiveTab('assignments')}
+            className={`w-full flex items-center p-3 rounded-lg transition-all ${activeTab === 'assignments' ? 'bg-indigo-700' : 'hover:bg-indigo-800'}`}
+          >
+            <FiBookOpen className="text-lg" />
+            {!sidebarCollapsed && <span className="ml-3">Assignments</span>}
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('risk-analysis')}
+            className={`w-full flex items-center p-3 rounded-lg transition-all ${activeTab === 'risk-analysis' ? 'bg-indigo-700' : 'hover:bg-indigo-800'}`}
+          >
+            <FaBrain className="text-lg" />
+            {!sidebarCollapsed && <span className="ml-3">AI Risk Analysis</span>}
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('academic-copilot')}
+            className={`w-full flex items-center p-3 rounded-lg transition-all ${activeTab === 'academic-copilot' ? 'bg-indigo-700' : 'hover:bg-indigo-800'}`}
+          >
+            <FaRobot className="text-lg" />
+            {!sidebarCollapsed && <span className="ml-3">Academic Co-Pilot</span>}
+          </button>
         </nav>
         
         <div className="p-4 border-t border-indigo-800">
@@ -296,6 +508,9 @@ const StudentDashboard = () => {
             {activeTab === 'timetable' && 'Class Schedule'}
             {activeTab === 'notices' && 'University Notices'}
             {activeTab === 'results' && 'Academic Results'}
+            {activeTab === 'assignments' && 'My Assignments'}
+            {activeTab === 'risk-analysis' && 'AI Risk Analysis'}
+            {activeTab === 'academic-copilot' && 'Academic Co-Pilot'}
           </h1>
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -343,7 +558,7 @@ const StudentDashboard = () => {
             </motion.div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <motion.div 
                 variants={cardVariants}
                 transition={{ duration: 0.3, delay: 0.1 }}
@@ -385,6 +600,18 @@ const StudentDashboard = () => {
                   {loadingNotices ? (
                     <span className="inline-block h-6 w-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></span>
                   ) : notices.length}
+                </p>
+              </motion.div>
+
+              <motion.div 
+                variants={cardVariants}
+                transition={{ duration: 0.3, delay: 0.4 }}
+                className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-pink-500"
+              >
+                <h3 className="text-gray-500 text-sm font-medium mb-1">Co-Pilot</h3>
+                <p className="text-2xl font-bold text-gray-800">
+                  <FaRobot className="inline mr-2" />
+                  Active
                 </p>
               </motion.div>
             </div>
@@ -485,6 +712,24 @@ const StudentDashboard = () => {
           </div>
         )}
 
+        {/* Assignments Tab */}
+        {activeTab === 'assignments' && (
+          <AssignmentList />
+        )}
+
+        {/* Risk Analysis Tab */}
+        {activeTab === 'risk-analysis' && (
+          <div className="bg-gradient-to-br from-gray-900 to-indigo-950 rounded-xl shadow-xl p-4 min-h-[600px]">
+            <RiskPrediction studentId={user?.user_id} />
+          </div>
+        )}
+
+        {/* Academic Co-Pilot Tab */}
+        {activeTab === 'academic-copilot' && (
+          <AcademicCopilot />
+        )}
+
+        {/* ... (rest of the existing tabs remain unchanged) ... */}
         {/* Profile Tab */}
         {activeTab === 'profile' && (
           <motion.div

@@ -1,17 +1,23 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import RoadmapDetails from './Components/AcademicCopilot/RoadmapDetailsNew';
 import './App.css';
 
 // Import components
 import Home from './Components/Home';
-import Login from './Components/Login'; // Make sure Login.jsx exists
-import Dashboard from './Components/Dashboard'; // Make sure Dashboard.jsx exists
-import ProtectedRoute from './Utils/ProtectedRoute'; // Make sure ProtectedRoute.jsx exists
+import Login from './Components/Login';
+import Dashboard from './Components/Dashboard';
+import ProtectedRoute from './Utils/ProtectedRoute';
 import StudentDashboard from './Components/StudentDashboard';
 import StaffDashboard from './Components/StaffDashboard';
+import { AuthProvider } from './context/AuthContext';
+
+// Assignment components
+import { AssignmentList, AssignmentDetails, StaffAssignments } from './Components/Assignments';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,6 +38,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/roadmap/:id" element={<RoadmapDetails />} />
         <Route
           path="/staff-dashboard"
           element={
@@ -40,8 +47,34 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Assignment Routes */}
+        <Route
+          path="/assignments"
+          element={
+            <ProtectedRoute>
+              <AssignmentList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/assignment/:id"
+          element={
+            <ProtectedRoute>
+              <AssignmentDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/assignments"
+          element={
+            <ProtectedRoute>
+              <StaffAssignments />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

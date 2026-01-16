@@ -585,9 +585,12 @@
 // export default StaffDashboard;
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../Config/Config';
-import { FiLogOut, FiUser, FiCalendar, FiUsers, FiClock, FiBook, FiBell, FiAward } from 'react-icons/fi';
+import { FiLogOut, FiUser, FiCalendar, FiUsers, FiClock, FiBook, FiBell, FiAward, FiFileText } from 'react-icons/fi';
+import { FaBrain } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { StaffAssignments } from './Assignments';
+import { StaffRiskDashboard } from './RiskPrediction';
 
 const StaffDashboard = () => {
   const [user, setUser] = useState(null);
@@ -1028,6 +1031,22 @@ const StaffDashboard = () => {
           >
             <FiAward className="text-lg" />
             <span>Results</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('assignments')}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'assignments' ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`}
+          >
+            <FiFileText className="text-lg" />
+            <span>Assignments</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('risk-dashboard')}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'risk-dashboard' ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`}
+          >
+            <FaBrain className="text-lg" />
+            <span>Risk Analysis</span>
           </button>
         </nav>
         
@@ -1493,6 +1512,18 @@ const StaffDashboard = () => {
               </div>
             )}
           </section>
+        )}
+
+        {/* Assignments Tab */}
+        {activeTab === 'assignments' && (
+          <StaffAssignments user={user} />
+        )}
+
+        {/* Risk Analysis Dashboard Tab */}
+        {activeTab === 'risk-dashboard' && (
+          <div className="bg-gradient-to-br from-gray-900 to-indigo-950 rounded-xl shadow-xl p-4 min-h-[600px]">
+            <StaffRiskDashboard />
+          </div>
         )}
       </main>
     </div>
