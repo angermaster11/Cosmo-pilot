@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateRoadmap } from "../../api/api";
+import { Target, Globe, Bot, Smartphone, Cloud, Shield, BarChart3, Clock, Sprout, TreeDeciduous, Sparkles, X, Settings } from "lucide-react";
 
 const CopilotChat = ({ onGenerate, onClose }) => {
   const [query, setQuery] = useState("");
@@ -11,12 +12,12 @@ const CopilotChat = ({ onGenerate, onClose }) => {
   const [step, setStep] = useState(1);
 
   const presets = [
-    { label: "🎯 DSA Mastery", query: "Create a comprehensive roadmap for mastering Data Structures and Algorithms for coding interviews" },
-    { label: "🌐 Web Development", query: "Full-stack web development roadmap with React, Node.js, and databases" },
-    { label: "🤖 Machine Learning", query: "Machine Learning roadmap from basics to deploying ML models" },
-    { label: "📱 Mobile Development", query: "React Native mobile app development from scratch" },
-    { label: "☁️ Cloud Computing", query: "AWS Cloud certification preparation roadmap" },
-    { label: "🔒 Cybersecurity", query: "Cybersecurity fundamentals and ethical hacking roadmap" },
+    { label: "DSA Mastery", icon: Target, query: "Create a comprehensive roadmap for mastering Data Structures and Algorithms for coding interviews" },
+    { label: "Web Development", icon: Globe, query: "Full-stack web development roadmap with React, Node.js, and databases" },
+    { label: "Machine Learning", icon: Bot, query: "Machine Learning roadmap from basics to deploying ML models" },
+    { label: "Mobile Development", icon: Smartphone, query: "React Native mobile app development from scratch" },
+    { label: "Cloud Computing", icon: Cloud, query: "AWS Cloud certification preparation roadmap" },
+    { label: "Cybersecurity", icon: Shield, query: "Cybersecurity fundamentals and ethical hacking roadmap" },
   ];
 
   const handleSubmit = async () => {
@@ -66,7 +67,7 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                 transition={{ duration: 2, repeat: Infinity }}
                 className="text-4xl"
               >
-                🤖
+                <Bot className="w-10 h-10" />
               </motion.div>
               <div>
                 <h3 className="text-xl font-bold">Academic Copilot</h3>
@@ -77,7 +78,7 @@ const CopilotChat = ({ onGenerate, onClose }) => {
               onClick={onClose}
               className="p-2 hover:bg-white/20 rounded-lg transition"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -92,8 +93,8 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  What do you want to learn? ✨
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+                  What do you want to learn? <Sparkles className="w-4 h-4 text-indigo-500" />
                 </label>
                 <textarea
                   value={query}
@@ -114,8 +115,9 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setQuery(preset.query)}
-                        className="px-3 py-1.5 bg-gray-100 hover:bg-indigo-100 text-gray-700 hover:text-indigo-700 rounded-lg text-xs font-medium transition"
+                        className="px-3 py-1.5 bg-gray-100 hover:bg-indigo-100 text-gray-700 hover:text-indigo-700 rounded-lg text-xs font-medium transition flex items-center gap-1"
                       >
+                        <preset.icon className="w-3 h-3" />
                         {preset.label}
                       </motion.button>
                     ))}
@@ -155,8 +157,8 @@ const CopilotChat = ({ onGenerate, onClose }) => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      ⏱️ Duration (optional)
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+                      <Clock className="w-4 h-4" /> Duration (optional)
                     </label>
                     <input
                       type="text"
@@ -169,14 +171,14 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      📊 Difficulty Level
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+                      <BarChart3 className="w-4 h-4" /> Difficulty Level
                     </label>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { value: "beginner", label: "Beginner", icon: "🌱" },
-                        { value: "intermediate", label: "Intermediate", icon: "🌿" },
-                        { value: "advanced", label: "Advanced", icon: "🌳" },
+                        { value: "beginner", label: "Beginner", Icon: Sprout },
+                        { value: "intermediate", label: "Intermediate", Icon: TreeDeciduous },
+                        { value: "advanced", label: "Advanced", Icon: Target },
                       ].map((option) => (
                         <motion.button
                           key={option.value}
@@ -189,7 +191,7 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                               : "border-gray-200 hover:border-gray-300"
                           }`}
                         >
-                          <div className="text-2xl mb-1">{option.icon}</div>
+                          <div className="flex justify-center mb-1"><option.Icon className="w-6 h-6" /></div>
                           <div className="text-xs font-medium">{option.label}</div>
                         </motion.button>
                       ))}
@@ -220,13 +222,13 @@ const CopilotChat = ({ onGenerate, onClose }) => {
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       >
-                        ⚙️
+                        <Settings className="w-5 h-5" />
                       </motion.span>
                       Generating your roadmap...
                     </>
                   ) : (
                     <>
-                      ✨ Generate Roadmap
+                      <Sparkles className="w-5 h-5" /> Generate Roadmap
                     </>
                   )}
                 </motion.button>

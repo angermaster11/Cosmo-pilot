@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Zap, CheckCircle, RefreshCw, Clock, Flame } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -270,7 +271,7 @@ export const XPProgressBar = ({ currentXP = 0, nextLevelXP = 1000, level = 1 }) 
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-3xl">⚡</span>
+          <Zap className="w-8 h-8 text-yellow-300" />
           <div>
             <p className="text-xs opacity-80">Experience Points</p>
             <p className="text-xl font-bold">{currentXP} XP</p>
@@ -306,10 +307,10 @@ export const XPProgressBar = ({ currentXP = 0, nextLevelXP = 1000, level = 1 }) 
 // Stats Grid Component
 export const StatsGrid = ({ stats }) => {
   const defaultStats = [
-    { label: "Tasks Completed", value: stats?.completed || 0, icon: "✅", color: "bg-green-100 text-green-600" },
-    { label: "In Progress", value: stats?.inProgress || 0, icon: "🔄", color: "bg-yellow-100 text-yellow-600" },
-    { label: "Total Hours", value: stats?.hours || 0, icon: "⏱️", color: "bg-blue-100 text-blue-600" },
-    { label: "Current Streak", value: stats?.streak || 0, icon: "🔥", color: "bg-orange-100 text-orange-600" },
+    { label: "Tasks Completed", value: stats?.completed || 0, Icon: CheckCircle, color: "bg-green-100 text-green-600" },
+    { label: "In Progress", value: stats?.inProgress || 0, Icon: RefreshCw, color: "bg-yellow-100 text-yellow-600" },
+    { label: "Total Hours", value: stats?.hours || 0, Icon: Clock, color: "bg-blue-100 text-blue-600" },
+    { label: "Current Streak", value: stats?.streak || 0, Icon: Flame, color: "bg-orange-100 text-orange-600" },
   ];
 
   return (
@@ -322,8 +323,8 @@ export const StatsGrid = ({ stats }) => {
           transition={{ delay: index * 0.1 }}
           className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow"
         >
-          <div className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center text-xl mb-2`}>
-            {stat.icon}
+          <div className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center mb-2`}>
+            <stat.Icon className="w-5 h-5" />
           </div>
           <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
           <p className="text-xs text-gray-500">{stat.label}</p>

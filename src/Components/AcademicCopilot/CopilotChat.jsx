@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { generateRoadmap } from "../../api/api";
+import { Bot, PartyPopper, Settings, Sparkles } from "lucide-react";
 
 const CopilotChat = ({ onGenerate, onClose }) => {
   const [query, setQuery] = useState("");
@@ -22,7 +23,7 @@ const CopilotChat = ({ onGenerate, onClose }) => {
         setQuery("");
         setDuration("");
         onClose();
-        alert("🎉 Roadmap generated successfully!");
+        alert("Roadmap generated successfully!");
       }
     } catch (err) {
       console.error("Error generating roadmap:", err);
@@ -34,7 +35,7 @@ const CopilotChat = ({ onGenerate, onClose }) => {
 
   return (
     <div className="fixed bottom-24 right-6 w-96 bg-white rounded-xl shadow-2xl p-4 z-50">
-      <h3 className="font-semibold mb-3 text-lg">🤖 Academic Copilot</h3>
+      <h3 className="font-semibold mb-3 text-lg flex items-center gap-2"><Bot className="w-5 h-5 text-indigo-600" /> Academic Copilot</h3>
 
       <textarea
         value={query}
@@ -94,12 +95,12 @@ const CopilotChat = ({ onGenerate, onClose }) => {
         >
           {loading ? (
             <>
-              <span className="animate-spin">⚙️</span>
+              <Settings className="w-4 h-4 animate-spin" />
               Generating...
             </>
           ) : (
             <>
-              <span>✨</span>
+              <Sparkles className="w-4 h-4" />
               Generate Roadmap
             </>
           )}

@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ClipboardList, Clock, CheckCircle, BookOpen, Inbox } from 'lucide-react';
 import { getActiveAssignments } from '../../api/api';
 import AssignmentCard from './AssignmentCard';
 import AssignmentSubmit from './AssignmentSubmit';
@@ -61,7 +62,9 @@ const AssignmentList = () => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">📝 Assignments</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+          <ClipboardList className="w-8 h-8 text-indigo-600" /> Assignments
+        </h1>
         <p className="text-gray-600">Submit your work and track your progress</p>
       </motion.div>
 
@@ -98,20 +101,20 @@ const AssignmentList = () => {
       {/* Filters */}
       <div className="flex gap-2 mb-6">
         {[
-          { id: 'all', label: 'All', icon: '📚' },
-          { id: 'pending', label: 'Pending', icon: '⏳' },
-          { id: 'submitted', label: 'Submitted', icon: '✅' }
+          { id: 'all', label: 'All', Icon: BookOpen },
+          { id: 'pending', label: 'Pending', Icon: Clock },
+          { id: 'submitted', label: 'Submitted', Icon: CheckCircle }
         ].map(f => (
           <button
             key={f.id}
             onClick={() => setFilter(f.id)}
-            className={`px-4 py-2 rounded-xl font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${
               filter === f.id
                 ? 'bg-blue-600 text-white shadow-lg'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            {f.icon} {f.label}
+            <f.Icon className="w-4 h-4" /> {f.label}
           </button>
         ))}
       </div>
@@ -137,11 +140,11 @@ const AssignmentList = () => {
           animate={{ opacity: 1 }}
           className="text-center py-16"
         >
-          <div className="text-6xl mb-4">📭</div>
+          <Inbox className="w-16 h-16 text-slate-300 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-700">No assignments found</h3>
           <p className="text-gray-500">
             {filter === 'pending' 
-              ? "You've submitted all your assignments! 🎉" 
+              ? "You've submitted all your assignments!" 
               : "Check back later for new assignments"}
           </p>
         </motion.div>

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { fetchRoadmapDetails } from "../../api/api";
 import Milestone from "./Milestone";
 import PerformanceGraph from "./PerformanceGraph";
+import { AlertCircle, Calendar, Target, Flame } from "lucide-react";
 
 const RoadmapDetails = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const RoadmapDetails = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="text-6xl mb-4">😕</div>
+          <AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-700 mb-2">
             {error || "Roadmap not found"}
           </h2>
@@ -84,15 +85,15 @@ const RoadmapDetails = () => {
         <h1 className="text-2xl font-bold mb-2">{roadmap.title}</h1>
         <p className="text-gray-500">{roadmap.description}</p>
         <div className="flex gap-4 mt-2">
-          <span className="text-sm text-gray-600">
-            📅 {roadmap.duration_days} days
+          <span className="text-sm text-gray-600 flex items-center gap-1">
+            <Calendar className="w-4 h-4" /> {roadmap.duration_days} days
           </span>
-          <span className="text-sm text-gray-600">
-            🎯 {roadmap.difficulty}
+          <span className="text-sm text-gray-600 flex items-center gap-1">
+            <Target className="w-4 h-4" /> {roadmap.difficulty}
           </span>
           {roadmap.current_streak > 0 && (
-            <span className="text-sm text-gray-600">
-              🔥 {roadmap.current_streak} day streak
+            <span className="text-sm text-gray-600 flex items-center gap-1">
+              <Flame className="w-4 h-4 text-orange-500" /> {roadmap.current_streak} day streak
             </span>
           )}
         </div>

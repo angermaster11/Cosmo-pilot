@@ -1,5 +1,25 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { 
+  Target, Flame, Zap, Gem, Crown, BookOpen, Rocket, Trophy, Award,
+  Star, Sunrise, Moon, Lock
+} from "lucide-react";
+
+// Icon components map
+const ICONS = {
+  Target: Target,
+  Flame: Flame,
+  Zap: Zap,
+  Gem: Gem,
+  Crown: Crown,
+  BookOpen: BookOpen,
+  Rocket: Rocket,
+  Trophy: Trophy,
+  Award: Award,
+  Star: Star,
+  Sunrise: Sunrise,
+  Moon: Moon
+};
 
 // Achievement definitions
 const ACHIEVEMENTS = [
@@ -7,7 +27,7 @@ const ACHIEVEMENTS = [
     id: "first_task",
     name: "First Steps",
     description: "Complete your first task",
-    icon: "🎯",
+    IconName: "Target",
     xp: 50,
     condition: (stats) => stats.tasksCompleted >= 1,
     rarity: "common"
@@ -16,7 +36,7 @@ const ACHIEVEMENTS = [
     id: "streak_3",
     name: "Getting Started",
     description: "Maintain a 3-day streak",
-    icon: "🔥",
+    IconName: "Flame",
     xp: 100,
     condition: (stats) => stats.currentStreak >= 3,
     rarity: "common"
@@ -25,7 +45,7 @@ const ACHIEVEMENTS = [
     id: "streak_7",
     name: "Week Warrior",
     description: "Maintain a 7-day streak",
-    icon: "⚡",
+    IconName: "Zap",
     xp: 250,
     condition: (stats) => stats.currentStreak >= 7,
     rarity: "rare"
@@ -34,7 +54,7 @@ const ACHIEVEMENTS = [
     id: "streak_14",
     name: "Fortnight Fighter",
     description: "Maintain a 14-day streak",
-    icon: "💎",
+    IconName: "Gem",
     xp: 500,
     condition: (stats) => stats.currentStreak >= 14,
     rarity: "epic"
@@ -43,7 +63,7 @@ const ACHIEVEMENTS = [
     id: "streak_30",
     name: "Monthly Master",
     description: "Maintain a 30-day streak",
-    icon: "👑",
+    IconName: "Crown",
     xp: 1000,
     condition: (stats) => stats.currentStreak >= 30,
     rarity: "legendary"
@@ -52,7 +72,7 @@ const ACHIEVEMENTS = [
     id: "tasks_10",
     name: "Task Tackler",
     description: "Complete 10 tasks",
-    icon: "📚",
+    IconName: "BookOpen",
     xp: 150,
     condition: (stats) => stats.tasksCompleted >= 10,
     rarity: "common"
@@ -61,7 +81,7 @@ const ACHIEVEMENTS = [
     id: "tasks_50",
     name: "Productivity Pro",
     description: "Complete 50 tasks",
-    icon: "🚀",
+    IconName: "Rocket",
     xp: 400,
     condition: (stats) => stats.tasksCompleted >= 50,
     rarity: "rare"
@@ -70,7 +90,7 @@ const ACHIEVEMENTS = [
     id: "tasks_100",
     name: "Century Champion",
     description: "Complete 100 tasks",
-    icon: "🏆",
+    IconName: "Trophy",
     xp: 800,
     condition: (stats) => stats.tasksCompleted >= 100,
     rarity: "epic"
@@ -79,7 +99,7 @@ const ACHIEVEMENTS = [
     id: "milestone_complete",
     name: "Milestone Maker",
     description: "Complete a milestone",
-    icon: "🎖️",
+    IconName: "Award",
     xp: 200,
     condition: (stats) => stats.milestonesCompleted >= 1,
     rarity: "rare"
@@ -88,7 +108,7 @@ const ACHIEVEMENTS = [
     id: "roadmap_complete",
     name: "Journey Complete",
     description: "Complete an entire roadmap",
-    icon: "🌟",
+    IconName: "Star",
     xp: 1500,
     condition: (stats) => stats.roadmapsCompleted >= 1,
     rarity: "legendary"
@@ -97,7 +117,7 @@ const ACHIEVEMENTS = [
     id: "early_bird",
     name: "Early Bird",
     description: "Complete a task before 8 AM",
-    icon: "🌅",
+    IconName: "Sunrise",
     xp: 75,
     condition: (stats) => stats.earlyTasks >= 1,
     rarity: "rare"
@@ -106,7 +126,7 @@ const ACHIEVEMENTS = [
     id: "night_owl",
     name: "Night Owl",
     description: "Complete a task after 10 PM",
-    icon: "🦉",
+    IconName: "Moon",
     xp: 75,
     condition: (stats) => stats.lateTasks >= 1,
     rarity: "rare"
@@ -175,11 +195,18 @@ const AchievementBadge = ({ achievement, unlocked, onClick }) => {
 
       <div className="relative z-10 text-center">
         <motion.div
-          className="text-4xl mb-2"
+          className="mb-2 flex justify-center"
           animate={unlocked ? { rotate: [0, -10, 10, 0] } : {}}
           transition={{ duration: 0.5, repeat: unlocked ? Infinity : 0, repeatDelay: 3 }}
         >
-          {unlocked ? achievement.icon : "🔒"}
+          {unlocked ? (
+            (() => {
+              const Icon = ICONS[achievement.IconName];
+              return Icon ? <Icon className="w-10 h-10 text-white" /> : null;
+            })()
+          ) : (
+            <Lock className="w-10 h-10 text-gray-400" />
+          )}
         </motion.div>
         <h4 className={`font-bold text-sm ${unlocked ? "text-white" : "text-gray-500"}`}>
           {achievement.name}
@@ -219,11 +246,14 @@ const AchievementModal = ({ achievement, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <motion.div
-          className="text-8xl mb-4"
+          className="mb-4 flex justify-center"
           animate={{ rotate: [0, -15, 15, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 0.5 }}
         >
-          {achievement.icon}
+          {(() => {
+            const Icon = ICONS[achievement.IconName];
+            return Icon ? <Icon className="w-20 h-20 text-white" /> : null;
+          })()}
         </motion.div>
         <h2 className="text-2xl font-black mb-2">{achievement.name}</h2>
         <p className="text-white/80 mb-4">{achievement.description}</p>
@@ -305,7 +335,7 @@ const Achievements = ({ stats = {} }) => {
         {/* Legendary */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span className="text-amber-500">👑</span> Legendary
+            <Crown className="w-5 h-5 text-amber-500" /> Legendary
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {ACHIEVEMENTS.filter((a) => a.rarity === "legendary").map((achievement) => (
@@ -322,7 +352,7 @@ const Achievements = ({ stats = {} }) => {
         {/* Epic */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span className="text-purple-500">💎</span> Epic
+            <Gem className="w-5 h-5 text-purple-500" /> Epic
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {ACHIEVEMENTS.filter((a) => a.rarity === "epic").map((achievement) => (
@@ -339,7 +369,7 @@ const Achievements = ({ stats = {} }) => {
         {/* Rare */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span className="text-blue-500">⚡</span> Rare
+            <Zap className="w-5 h-5 text-blue-500" /> Rare
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {ACHIEVEMENTS.filter((a) => a.rarity === "rare").map((achievement) => (
@@ -356,7 +386,7 @@ const Achievements = ({ stats = {} }) => {
         {/* Common */}
         <div>
           <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span className="text-gray-500">🌟</span> Common
+            <Star className="w-5 h-5 text-gray-500" /> Common
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {ACHIEVEMENTS.filter((a) => a.rarity === "common").map((achievement) => (

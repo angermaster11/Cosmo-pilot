@@ -4,6 +4,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
+  BookOpen, Plus, BarChart3, Trash2, FileText, HelpCircle, Code, Calculator,
+  FileSpreadsheet, Clock, AlertTriangle, CheckCircle, Trophy, Medal, X,
+  ChevronDown, ChevronRight, Target, ListChecks, Key, Rocket, ThumbsUp,
+  ThumbsDown, Lightbulb, ArrowRight, Inbox, Loader2, Flag
+} from 'lucide-react';
+import { 
   getStaffAssignments, 
   createAssignment, 
   deleteAssignment,
@@ -62,14 +68,16 @@ const StaffAssignments = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">📚 Assignment Manager</h1>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <BookOpen className="w-8 h-8 text-indigo-600" /> Assignment Manager
+          </h1>
           <p className="text-gray-600">Create and manage student assignments</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
           className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"
         >
-          ➕ Create Assignment
+          <Plus className="w-5 h-5" /> Create Assignment
         </button>
       </div>
 
@@ -155,15 +163,15 @@ const StaffAssignments = () => {
                   <div className="flex gap-2 justify-end">
                     <button
                       onClick={() => setViewSubmissions(assignment)}
-                      className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                      className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-1"
                     >
-                      📊 View
+                      <BarChart3 className="w-4 h-4" /> View
                     </button>
                     <button
                       onClick={() => handleDelete(assignment.id)}
                       className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
                     >
-                      🗑️
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </td>
@@ -174,7 +182,7 @@ const StaffAssignments = () => {
 
         {assignments.length === 0 && (
           <div className="text-center py-16">
-            <div className="text-6xl mb-4">📝</div>
+            <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-700">No assignments yet</h3>
             <p className="text-gray-500">Create your first assignment to get started</p>
           </div>
@@ -276,12 +284,12 @@ const CreateAssignmentModal = ({ onClose, onSuccess }) => {
   };
 
   const assignmentTypes = [
-    { value: 'general', label: '📝 General', desc: 'Standard assignment' },
-    { value: 'essay', label: '📄 Essay', desc: 'Written composition' },
-    { value: 'quiz', label: '❓ Quiz', desc: 'Questions & answers' },
-    { value: 'code', label: '💻 Code', desc: 'Programming task' },
-    { value: 'math', label: '🔢 Math', desc: 'Mathematical problems' },
-    { value: 'report', label: '📊 Report', desc: 'Research/Lab report' }
+    { value: 'general', label: 'General', Icon: FileText, desc: 'Standard assignment' },
+    { value: 'essay', label: 'Essay', Icon: FileText, desc: 'Written composition' },
+    { value: 'quiz', label: 'Quiz', Icon: HelpCircle, desc: 'Questions & answers' },
+    { value: 'code', label: 'Code', Icon: Code, desc: 'Programming task' },
+    { value: 'math', label: 'Math', Icon: Calculator, desc: 'Mathematical problems' },
+    { value: 'report', label: 'Report', Icon: FileSpreadsheet, desc: 'Research/Lab report' }
   ];
 
   return (
@@ -300,7 +308,9 @@ const CreateAssignmentModal = ({ onClose, onSuccess }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-bold text-gray-900">➕ Create New Assignment</h2>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Plus className="w-6 h-6 text-indigo-600" /> Create New Assignment
+          </h2>
           <p className="text-gray-500 text-sm mt-1">AI will evaluate submissions based on your questions and criteria</p>
         </div>
 
@@ -335,7 +345,9 @@ const CreateAssignmentModal = ({ onClose, onSuccess }) => {
                       : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
                   }`}
                 >
-                  <div className="font-medium">{type.label}</div>
+                  <div className="font-medium flex items-center gap-2">
+                    <type.Icon className="w-4 h-4" /> {type.label}
+                  </div>
                   <div className="text-xs text-gray-500">{type.desc}</div>
                 </button>
               ))}
@@ -369,8 +381,8 @@ const CreateAssignmentModal = ({ onClose, onSuccess }) => {
 2. Compare and contrast inheritance vs composition.
 3. Write a code example demonstrating encapsulation."
             />
-            <p className="text-xs text-gray-500 mt-1">
-              💡 Tip: Be specific! The AI will check if students answered these exact questions.
+            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+              <Lightbulb className="w-3 h-3 text-amber-500" /> Tip: Be specific! The AI will check if students answered these exact questions.
             </p>
           </div>
 
@@ -380,14 +392,14 @@ const CreateAssignmentModal = ({ onClose, onSuccess }) => {
             onClick={() => setShowAdvanced(!showAdvanced)}
             className="flex items-center gap-2 text-indigo-600 font-medium hover:text-indigo-700"
           >
-            {showAdvanced ? '▼' : '▶'} Advanced Evaluation Options
+            {showAdvanced ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />} Advanced Evaluation Options
           </button>
 
           {showAdvanced && (
             <div className="space-y-4 p-4 bg-indigo-50 rounded-xl">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🎯 Specific Questions (One per line)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Target className="w-4 h-4 text-indigo-500" /> Specific Questions (One per line)
                 </label>
                 <textarea
                   value={formData.questions}
@@ -403,8 +415,8 @@ Write a function to reverse a linked list."
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📚 Required Topics (comma-separated)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <ListChecks className="w-4 h-4 text-indigo-500" /> Required Topics (comma-separated)
                 </label>
                 <input
                   type="text"
@@ -419,8 +431,8 @@ Write a function to reverse a linked list."
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📝 Answer Key / Expected Answers (Optional)
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <Key className="w-4 h-4 text-indigo-500" /> Answer Key / Expected Answers (Optional)
                 </label>
                 <textarea
                   value={formData.answer_key}
@@ -487,8 +499,8 @@ Key points: O(n) complexity, base case required..."
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-              ⚠️ {error}
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" /> {error}
             </div>
           )}
 
@@ -505,7 +517,7 @@ Key points: O(n) complexity, base case required..."
               disabled={creating}
               className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50"
             >
-              {creating ? 'Creating...' : '🚀 Create Assignment'}
+              {creating ? 'Creating...' : <><Rocket className="w-4 h-4 inline mr-1" /> Create Assignment</>}
             </button>
           </div>
         </form>
@@ -558,13 +570,15 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
       >
         <div className="p-6 border-b flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">📊 {assignment.title}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <BarChart3 className="w-6 h-6 text-indigo-600" /> {assignment.title}
+            </h2>
             <p className="text-gray-600">
               {submissions.length} submissions • {leaderboard.length} ranked
             </p>
           </div>
-          <button onClick={onClose} className="text-2xl hover:bg-gray-100 p-2 rounded-full">
-            ✕
+          <button onClick={onClose} className="hover:bg-gray-100 p-2 rounded-full">
+            <X className="w-6 h-6" />
           </button>
         </div>
 
@@ -572,23 +586,23 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
         <div className="flex border-b">
           <button
             onClick={() => setActiveTab('submissions')}
-            className={`flex-1 py-3 px-4 font-medium transition-colors ${
+            className={`flex-1 py-3 px-4 font-medium transition-colors flex items-center justify-center gap-2 ${
               activeTab === 'submissions'
                 ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            📝 Submissions ({submissions.length})
+            <FileText className="w-4 h-4" /> Submissions ({submissions.length})
           </button>
           <button
             onClick={() => setActiveTab('leaderboard')}
-            className={`flex-1 py-3 px-4 font-medium transition-colors ${
+            className={`flex-1 py-3 px-4 font-medium transition-colors flex items-center justify-center gap-2 ${
               activeTab === 'leaderboard'
                 ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
-            🏆 Leaderboard ({leaderboard.length})
+            <Trophy className="w-4 h-4" /> Leaderboard ({leaderboard.length})
           </button>
         </div>
 
@@ -605,7 +619,7 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
             /* Submissions Tab */
             submissions.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">📭</div>
+                <Inbox className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-700">No submissions yet</h3>
               </div>
             ) : (
@@ -633,13 +647,13 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
                               {sub.student_name || `Student #${sub.student_id}`}
                             </span>
                             {sub.is_late && (
-                              <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs">
-                                ⏰ Late
+                              <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs flex items-center gap-1">
+                                <Clock className="w-3 h-3" /> Late
                               </span>
                             )}
                             {evaluation?.is_plagiarized && (
-                              <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs">
-                                ⚠️ Plagiarism {evaluation.plagiarism_score?.toFixed(1)}%
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex items-center gap-1">
+                                <AlertTriangle className="w-3 h-3" /> Plagiarism {evaluation.plagiarism_score?.toFixed(1)}%
                               </span>
                             )}
                           </div>
@@ -673,13 +687,15 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
                           
                           {/* Pros and Cons Preview */}
                           {evaluation?.strengths && evaluation.strengths.length > 0 && (
-                            <div className="mt-2 text-sm">
-                              <span className="text-green-600">✓ {evaluation.strengths[0]}</span>
+                            <div className="mt-2 text-sm flex items-center gap-1">
+                              <CheckCircle className="w-3 h-3 text-green-600" />
+                              <span className="text-green-600">{evaluation.strengths[0]}</span>
                             </div>
                           )}
                           {evaluation?.improvements && evaluation.improvements.length > 0 && (
-                            <div className="text-sm">
-                              <span className="text-red-600">✗ {evaluation.improvements[0]}</span>
+                            <div className="text-sm flex items-center gap-1">
+                              <X className="w-3 h-3 text-red-600" />
+                              <span className="text-red-600">{evaluation.improvements[0]}</span>
                             </div>
                           )}
                         </div>
@@ -716,8 +732,8 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
                             </div>
                           ) : (
                             <div>
-                              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                                {sub.status === 'evaluating' ? '⏳ Evaluating...' : '⏳ Pending'}
+                              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                                <Clock className="w-3 h-3" /> {sub.status === 'evaluating' ? 'Evaluating...' : 'Pending'}
                               </span>
                             </div>
                           )}
@@ -732,7 +748,7 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
             /* Leaderboard Tab */
             leaderboard.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">🏆</div>
+                <Trophy className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-700">No rankings yet</h3>
                 <p className="text-gray-500">Rankings appear after submissions are evaluated</p>
               </div>
@@ -758,7 +774,7 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
                       entry.rank === 3 ? 'bg-orange-400 text-white' :
                       'bg-gray-200 text-gray-700'
                     }`}>
-                      {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                      {entry.rank <= 3 ? <Medal className="w-6 h-6" /> : `#${entry.rank}`}
                     </div>
                     
                     {/* Student Info */}
@@ -784,7 +800,9 @@ const ViewSubmissionsModal = ({ assignment, onClose }) => {
                         {entry.percentage?.toFixed(1)}%
                       </div>
                       {entry.is_plagiarized && (
-                        <span className="text-xs text-red-600">⚠️ Flagged</span>
+                        <span className="text-xs text-red-600 flex items-center gap-1">
+                          <Flag className="w-3 h-3" /> Flagged
+                        </span>
                       )}
                     </div>
                   </motion.div>
@@ -841,15 +859,15 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
         <div className="p-6 border-b bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-bold">
-                📋 {submission.student_name || `Student #${submission.student_id}`}
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <FileText className="w-5 h-5" /> {submission.student_name || `Student #${submission.student_id}`}
               </h2>
               <p className="text-indigo-100">
                 Submitted {new Date(submission.submitted_at).toLocaleString()}
               </p>
             </div>
-            <button onClick={onClose} className="text-2xl hover:bg-white/20 p-2 rounded-full">
-              ✕
+            <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-full">
+              <X className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -883,7 +901,9 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
 
               {/* Score Breakdown */}
               <div>
-                <h3 className="font-bold text-gray-900 mb-3">📊 Score Breakdown</h3>
+                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-indigo-600" /> Score Breakdown
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { label: 'Content Quality', score: evaluation.content_score, max: 30, color: 'blue' },
@@ -910,11 +930,13 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
               {/* Pros */}
               {(evaluation.strengths?.length > 0 || evaluation.pros?.length > 0) && (
                 <div>
-                  <h3 className="font-bold text-green-700 mb-2">✅ Strengths (What went well)</h3>
+                  <h3 className="font-bold text-green-700 mb-2 flex items-center gap-2">
+                    <ThumbsUp className="w-4 h-4" /> Strengths (What went well)
+                  </h3>
                   <ul className="space-y-2">
                     {(evaluation.strengths || evaluation.pros || []).map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-gray-700">
-                        <span className="text-green-500">✓</span>
+                        <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -925,11 +947,13 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
               {/* Cons */}
               {(evaluation.improvements?.length > 0 || evaluation.cons?.length > 0) && (
                 <div>
-                  <h3 className="font-bold text-red-700 mb-2">⚠️ Areas for Improvement</h3>
+                  <h3 className="font-bold text-red-700 mb-2 flex items-center gap-2">
+                    <ThumbsDown className="w-4 h-4" /> Areas for Improvement
+                  </h3>
                   <ul className="space-y-2">
                     {(evaluation.improvements || evaluation.cons || []).map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-gray-700">
-                        <span className="text-red-500">✗</span>
+                        <X className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -940,11 +964,13 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
               {/* Suggestions */}
               {evaluation.suggestions?.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-blue-700 mb-2">💡 Suggestions for Improvement</h3>
+                  <h3 className="font-bold text-blue-700 mb-2 flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4" /> Suggestions for Improvement
+                  </h3>
                   <ul className="space-y-2">
                     {evaluation.suggestions.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-gray-700">
-                        <span className="text-blue-500">→</span>
+                        <ArrowRight className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -988,7 +1014,9 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
               {/* Plagiarism Warning */}
               {evaluation.is_plagiarized && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <h3 className="font-bold text-red-700 mb-2">⚠️ Plagiarism Detected</h3>
+                  <h3 className="font-bold text-red-700 mb-2 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" /> Plagiarism Detected
+                  </h3>
                   <p className="text-red-600">
                     This submission has {evaluation.plagiarism_score?.toFixed(1)}% similarity with other submissions.
                     The score has been penalized accordingly.
@@ -999,13 +1027,15 @@ const SubmissionDetailModal = ({ submission, onClose }) => {
               {/* Encouragement */}
               {evaluation.encouragement && (
                 <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl">
-                  <p className="text-indigo-700 italic">💪 {evaluation.encouragement}</p>
+                  <p className="text-indigo-700 italic flex items-center gap-2">
+                    <ThumbsUp className="w-4 h-4" /> {evaluation.encouragement}
+                  </p>
                 </div>
               )}
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">⏳</div>
+              <Clock className="w-16 h-16 text-slate-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-700">Evaluation Pending</h3>
               <p className="text-gray-500">This submission is still being evaluated</p>
             </div>

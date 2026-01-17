@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Rocket } from "lucide-react";
 import CopilotButton from "./CopilotButton";
 import CopilotChat from "./CopilotChat";
 import RoadmapBoard from "./RoadmapBoard";
@@ -51,7 +52,7 @@ const AcademicCopilot = () => {
 
         {roadmaps.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🚀</div>
+            <Rocket className="w-16 h-16 text-indigo-500 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               No roadmaps yet
             </h3>

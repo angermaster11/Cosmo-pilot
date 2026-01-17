@@ -3,6 +3,10 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Upload, FileText, PenLine, X, Folder, FileSpreadsheet, File,
+  AlertCircle, ClipboardList, Rocket
+} from 'lucide-react';
 import { submitTextAssignment, submitFileAssignment } from '../../api/api';
 
 const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
@@ -81,15 +85,10 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
 
   const getFileIcon = (filename) => {
     const ext = filename?.split('.').pop().toLowerCase();
-    const icons = {
-      pdf: '📕',
-      ppt: '📊',
-      pptx: '📊',
-      doc: '📄',
-      docx: '📄',
-      txt: '📝'
-    };
-    return icons[ext] || '📁';
+    if (ext === 'pdf') return <File className="w-12 h-12 text-red-500" />;
+    if (ext === 'ppt' || ext === 'pptx') return <FileSpreadsheet className="w-12 h-12 text-orange-500" />;
+    if (ext === 'doc' || ext === 'docx') return <FileText className="w-12 h-12 text-blue-500" />;
+    return <Folder className="w-12 h-12 text-slate-500" />;
   };
 
   return (
@@ -111,14 +110,16 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-2xl font-bold mb-1">📤 Submit Assignment</h2>
+              <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
+                <Upload className="w-6 h-6" /> Submit Assignment
+              </h2>
               <p className="text-blue-100 text-sm">{assignment.title}</p>
             </div>
             <button
               onClick={onClose}
               className="p-2 hover:bg-white/20 rounded-full transition-colors"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -129,23 +130,23 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
           <div className="flex gap-2 mb-6">
             <button
               onClick={() => setSubmitType('file')}
-              className={`flex-1 py-3 rounded-xl font-medium transition-all ${
+              className={`flex-1 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
                 submitType === 'file'
                   ? 'bg-blue-600 text-white shadow-lg'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              📁 Upload File
+              <Folder className="w-4 h-4" /> Upload File
             </button>
             <button
               onClick={() => setSubmitType('text')}
-              className={`flex-1 py-3 rounded-xl font-medium transition-all ${
+              className={`flex-1 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
                 submitType === 'text'
                   ? 'bg-blue-600 text-white shadow-lg'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              ✏️ Write Text
+              <PenLine className="w-4 h-4" /> Write Text
             </button>
           </div>
 
@@ -182,7 +183,7 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
                   
                   {selectedFile ? (
                     <div>
-                      <div className="text-5xl mb-3">{getFileIcon(selectedFile.name)}</div>
+                      <div className="mb-3 flex justify-center">{getFileIcon(selectedFile.name)}</div>
                       <p className="font-medium text-gray-900">{selectedFile.name}</p>
                       <p className="text-sm text-gray-500 mt-1">
                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
@@ -192,14 +193,14 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
                           e.stopPropagation();
                           setSelectedFile(null);
                         }}
-                        className="mt-3 text-red-600 hover:text-red-700 text-sm font-medium"
+                        className="mt-3 text-red-600 hover:text-red-700 text-sm font-medium flex items-center gap-1 mx-auto"
                       >
-                        ✕ Remove
+                        <X className="w-4 h-4" /> Remove
                       </button>
                     </div>
                   ) : (
                     <div>
-                      <div className="text-5xl mb-3">📤</div>
+                      <Upload className="w-12 h-12 text-slate-400 mx-auto mb-3" />
                       <p className="font-medium text-gray-700">
                         Drag & drop your file here
                       </p>
@@ -216,14 +217,14 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
                 {/* Format Icons */}
                 <div className="flex justify-center gap-4 mt-4">
                   {[
-                    { ext: 'pdf', icon: '📕', label: 'PDF' },
-                    { ext: 'ppt', icon: '📊', label: 'PPT' },
-                    { ext: 'doc', icon: '📄', label: 'DOC' },
-                    { ext: 'txt', icon: '📝', label: 'TXT' }
+                    { ext: 'pdf', Icon: File, label: 'PDF', color: 'text-red-500' },
+                    { ext: 'ppt', Icon: FileSpreadsheet, label: 'PPT', color: 'text-orange-500' },
+                    { ext: 'doc', Icon: FileText, label: 'DOC', color: 'text-blue-500' },
+                    { ext: 'txt', Icon: FileText, label: 'TXT', color: 'text-slate-500' }
                   ].filter(f => allowedFormats.some(a => a.includes(f.ext))).map(format => (
                     <div key={format.ext} className="text-center">
-                      <div className="text-2xl">{format.icon}</div>
-                      <div className="text-xs text-gray-500">{format.label}</div>
+                      <format.Icon className={`w-6 h-6 mx-auto ${format.color}`} />
+                      <div className="text-xs text-gray-500 mt-1">{format.label}</div>
                     </div>
                   ))}
                 </div>
@@ -255,16 +256,18 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm"
+              className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center gap-2"
             >
-              ⚠️ {error}
+              <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
             </motion.div>
           )}
 
           {/* Instructions */}
           {assignment.instructions && (
             <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-              <h4 className="font-medium text-gray-700 mb-2">📋 Instructions</h4>
+              <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <ClipboardList className="w-4 h-4" /> Instructions
+              </h4>
               <p className="text-sm text-gray-600 whitespace-pre-wrap">
                 {assignment.instructions}
               </p>
@@ -296,7 +299,7 @@ const AssignmentSubmit = ({ assignment, onClose, onSuccess }) => {
                 Submitting...
               </>
             ) : (
-              <>🚀 Submit Assignment</>
+              <><Rocket className="w-5 h-5" /> Submit Assignment</>
             )}
           </button>
         </div>

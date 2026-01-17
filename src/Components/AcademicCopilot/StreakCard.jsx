@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Crown, Gem, Zap, Star, Flame, Trophy, Calendar, Check, Clock } from "lucide-react";
 
 const StreakCard = ({ currentStreak = 0, longestStreak = 0, lastActivityDate }) => {
   const streakLevel = 
@@ -8,11 +9,11 @@ const StreakCard = ({ currentStreak = 0, longestStreak = 0, lastActivityDate }) 
     currentStreak >= 3 ? "common" : "starter";
 
   const levelConfig = {
-    legendary: { color: "from-amber-400 to-orange-600", icon: "👑", title: "LEGENDARY" },
-    epic: { color: "from-purple-500 to-pink-600", icon: "💎", title: "EPIC" },
-    rare: { color: "from-blue-500 to-cyan-500", icon: "⚡", title: "RARE" },
-    common: { color: "from-green-400 to-emerald-500", icon: "🌟", title: "COMMON" },
-    starter: { color: "from-gray-400 to-gray-500", icon: "🔥", title: "STARTER" }
+    legendary: { color: "from-amber-400 to-orange-600", icon: <Crown className="w-12 h-12" />, title: "LEGENDARY" },
+    epic: { color: "from-purple-500 to-pink-600", icon: <Gem className="w-12 h-12" />, title: "EPIC" },
+    rare: { color: "from-blue-500 to-cyan-500", icon: <Zap className="w-12 h-12" />, title: "RARE" },
+    common: { color: "from-green-400 to-emerald-500", icon: <Star className="w-12 h-12" />, title: "COMMON" },
+    starter: { color: "from-gray-400 to-gray-500", icon: <Flame className="w-12 h-12" />, title: "STARTER" }
   };
 
   const config = levelConfig[streakLevel];
@@ -87,13 +88,13 @@ const StreakCard = ({ currentStreak = 0, longestStreak = 0, lastActivityDate }) 
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white/10 rounded-xl p-3">
-            <p className="text-xs opacity-80">🏆 Best Streak</p>
+            <p className="text-xs opacity-80 flex items-center gap-1"><Trophy className="w-3 h-3" /> Best Streak</p>
             <p className="text-xl font-bold">{longestStreak} days</p>
           </div>
           <div className="bg-white/10 rounded-xl p-3">
-            <p className="text-xs opacity-80">📅 Today</p>
-            <p className="text-xl font-bold">
-              {isActiveToday ? "✓ Active" : "⏳ Pending"}
+            <p className="text-xs opacity-80 flex items-center gap-1"><Calendar className="w-3 h-3" /> Today</p>
+            <p className="text-xl font-bold flex items-center gap-1">
+              {isActiveToday ? <><Check className="w-4 h-4" /> Active</> : <><Clock className="w-4 h-4" /> Pending</>}
             </p>
           </div>
         </div>

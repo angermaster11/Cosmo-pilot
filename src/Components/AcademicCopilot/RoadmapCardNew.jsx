@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format, formatDistanceToNow } from "date-fns";
+import { Trophy, Rocket, BookOpen, ClipboardList, Flame } from "lucide-react";
 
 const RoadmapCard = ({ roadmap, index = 0 }) => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
         color: "from-green-400 to-emerald-500",
         bgColor: "bg-green-50",
         textColor: "text-green-700",
-        icon: "🏆"
+        Icon: Trophy
       };
     }
     if (progress > 50) {
@@ -26,7 +27,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
         color: "from-indigo-500 to-purple-500",
         bgColor: "bg-indigo-50",
         textColor: "text-indigo-700",
-        icon: "🚀"
+        Icon: Rocket
       };
     }
     if (progress > 0) {
@@ -35,7 +36,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
         color: "from-yellow-400 to-orange-500",
         bgColor: "bg-yellow-50",
         textColor: "text-yellow-700",
-        icon: "📚"
+        Icon: BookOpen
       };
     }
     return {
@@ -43,7 +44,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
       color: "from-gray-400 to-gray-500",
       bgColor: "bg-gray-50",
       textColor: "text-gray-600",
-      icon: "📋"
+      Icon: ClipboardList
     };
   };
 
@@ -78,7 +79,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-2xl">{statusConfig.icon}</span>
+              <statusConfig.Icon className="w-6 h-6" style={{color: statusConfig.textColor.includes('green') ? '#15803d' : statusConfig.textColor.includes('indigo') ? '#4338ca' : statusConfig.textColor.includes('yellow') ? '#a16207' : '#4b5563'}} />
               <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
                 {statusConfig.status}
               </span>
@@ -95,7 +96,7 @@ const RoadmapCard = ({ roadmap, index = 0 }) => {
               transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
               className="flex items-center gap-1 px-3 py-1 bg-orange-100 rounded-full"
             >
-              <span>🔥</span>
+              <Flame className="w-4 h-4 text-orange-500" />
               <span className="text-sm font-bold text-orange-600">{streak}</span>
             </motion.div>
           )}

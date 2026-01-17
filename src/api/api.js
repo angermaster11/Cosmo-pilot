@@ -362,6 +362,44 @@ export const getLeaderboard = async (assignmentId) => {
   }
 };
 
+// Get detailed feedback for a submission
+export const getDetailedFeedback = async (submissionId) => {
+  try {
+    const response = await assignmentClient.get(`/submission/${submissionId}/feedback`);
+    return response.data;
+  } catch (error) {
+    console.error('Fetch Detailed Feedback Error:', error);
+    throw error;
+  }
+};
+
+// Parse questions from text
+export const parseQuestionsFromText = async (text) => {
+  try {
+    const response = await assignmentClient.post('/parse-questions', { text });
+    return response.data;
+  } catch (error) {
+    console.error('Parse Questions Error:', error);
+    return { questions: [], count: 0 };
+  }
+};
+
+// Poll submission status until evaluated
+export const pollSubmissionStatus = async (submissionId, maxAttempts = 30, interval = 3000) => {
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      const response = await assignmentClient.get(`/submission/${submissionId}/status`);
+      if (response.data.submission?.status === 'evaluated' || response.data.is_evaluated) {
+        return response.data;
+      }
+      await new Promise(resolve => setTimeout(resolve, interval));
+    } catch (error) {
+      console.error('Poll status error:', error);
+    }
+  }
+  return null;
+};
+
 // ================== RISK PREDICTION API ==================
 
 const riskClient = axios.create({

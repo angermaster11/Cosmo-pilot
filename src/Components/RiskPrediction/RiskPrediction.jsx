@@ -52,29 +52,29 @@ const RiskPrediction = ({ studentId }) => {
 
   const getRiskColor = (level) => {
     switch (level?.toLowerCase()) {
-      case 'low': return '#10b981';
-      case 'moderate': return '#f59e0b';
-      case 'high': return '#ef4444';
-      case 'critical': return '#dc2626';
-      default: return '#6b7280';
+      case 'low': return '#22C55E';
+      case 'moderate': return '#FBBF24';
+      case 'high': return '#F97316';
+      case 'critical': return '#F87171';
+      default: return '#64748B';
     }
   };
 
   const getRiskIcon = (level) => {
     switch (level?.toLowerCase()) {
-      case 'low': return <FaCheckCircle className="text-green-500" />;
-      case 'moderate': return <FaExclamationTriangle className="text-yellow-500" />;
+      case 'low': return <FaCheckCircle className="text-emerald-500" />;
+      case 'moderate': return <FaExclamationTriangle className="text-amber-500" />;
       case 'high': return <FaExclamationTriangle className="text-orange-500" />;
-      case 'critical': return <FaExclamationTriangle className="text-red-500" />;
-      default: return <FaMinus className="text-gray-500" />;
+      case 'critical': return <FaExclamationTriangle className="text-rose-500" />;
+      default: return <FaMinus className="text-slate-500" />;
     }
   };
 
   const getTrendIcon = (trend) => {
     switch (trend?.toLowerCase()) {
-      case 'improving': return <FaArrowUp className="text-green-500" />;
-      case 'declining': return <FaArrowDown className="text-red-500" />;
-      default: return <FaMinus className="text-gray-500" />;
+      case 'improving': return <FaArrowUp className="text-emerald-500" />;
+      case 'declining': return <FaArrowDown className="text-rose-500" />;
+      default: return <FaMinus className="text-slate-500" />;
     }
   };
 
@@ -90,9 +90,9 @@ const RiskPrediction = ({ studentId }) => {
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         >
-          <FaBrain className="text-6xl text-purple-500" />
+          <FaBrain className="text-6xl text-violet-500" />
         </motion.div>
-        <p className="mt-4 text-gray-400">Analyzing your academic data with AI...</p>
+        <p className="mt-4 text-slate-500">Analyzing your academic data with AI...</p>
       </div>
     );
   }
@@ -100,8 +100,8 @@ const RiskPrediction = ({ studentId }) => {
   if (error) {
     return (
       <div className="risk-error">
-        <FaExclamationTriangle className="text-4xl text-red-500 mb-4" />
-        <p className="text-red-400">{error}</p>
+        <FaExclamationTriangle className="text-4xl text-rose-500 mb-4" />
+        <p className="text-rose-500">{error}</p>
         <button onClick={fetchRiskData} className="retry-btn">
           Try Again
         </button>
@@ -114,7 +114,7 @@ const RiskPrediction = ({ studentId }) => {
       {/* Header */}
       <div className="risk-header">
         <div className="risk-header-left">
-          <FaBrain className="text-3xl text-purple-500" />
+          <FaBrain className="text-3xl text-violet-500" />
           <div>
             <h1>AI Risk Analysis</h1>
             <p>Powered by Machine Learning & LLM</p>
@@ -138,7 +138,7 @@ const RiskPrediction = ({ studentId }) => {
             <path
               d="M 20 100 A 80 80 0 0 1 180 100"
               fill="none"
-              stroke="#2d3748"
+              stroke="#E2E8F0"
               strokeWidth="20"
               strokeLinecap="round"
             />
@@ -146,20 +146,20 @@ const RiskPrediction = ({ studentId }) => {
             <path
               d="M 20 100 A 80 80 0 0 1 65 35"
               fill="none"
-              stroke="#10b981"
+              stroke="#22C55E"
               strokeWidth="20"
               strokeLinecap="round"
             />
             <path
               d="M 65 35 A 80 80 0 0 1 135 35"
               fill="none"
-              stroke="#f59e0b"
+              stroke="#FBBF24"
               strokeWidth="20"
             />
             <path
               d="M 135 35 A 80 80 0 0 1 180 100"
               fill="none"
-              stroke="#ef4444"
+              stroke="#F87171"
               strokeWidth="20"
               strokeLinecap="round"
             />
@@ -170,11 +170,11 @@ const RiskPrediction = ({ studentId }) => {
                 y1="100"
                 x2="100"
                 y2="30"
-                stroke="#fff"
+                stroke="#475569"
                 strokeWidth="3"
                 strokeLinecap="round"
               />
-              <circle cx="100" cy="100" r="8" fill="#fff" />
+              <circle cx="100" cy="100" r="8" fill="#475569" />
             </g>
           </svg>
           <div className="gauge-value">

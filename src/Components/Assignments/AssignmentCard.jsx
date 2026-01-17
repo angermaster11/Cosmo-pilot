@@ -4,6 +4,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { 
+  CheckCircle, Clock, AlertTriangle, FileText, Calendar, BarChart3, 
+  FolderOpen, Upload, Eye, AlertCircle
+} from 'lucide-react';
 
 const AssignmentCard = ({ assignment, index, onSubmit, onRefresh }) => {
   const navigate = useNavigate();
@@ -41,28 +45,28 @@ const AssignmentCard = ({ assignment, index, onSubmit, onRefresh }) => {
     }
     if (submission?.status === 'evaluating') {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 animate-pulse">
-          ⏳ Evaluating...
+        <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 animate-pulse flex items-center gap-1">
+          <Clock className="w-3 h-3" /> Evaluating...
         </span>
       );
     }
     if (isSubmitted) {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-          ✅ Submitted
+        <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 flex items-center gap-1">
+          <CheckCircle className="w-3 h-3" /> Submitted
         </span>
       );
     }
     if (isPastDue) {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
-          ⚠️ Past Due
+        <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 flex items-center gap-1">
+          <AlertTriangle className="w-3 h-3" /> Past Due
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
-        📝 Pending
+      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 flex items-center gap-1">
+        <FileText className="w-3 h-3" /> Pending
       </span>
     );
   };
@@ -102,17 +106,17 @@ const AssignmentCard = ({ assignment, index, onSubmit, onRefresh }) => {
         {/* Meta info */}
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2 text-gray-500">
-            <span>📅</span>
+            <Calendar className="w-4 h-4" />
             <span className={isPastDue && !isSubmitted ? 'text-red-600 font-medium' : ''}>
               Due: {formatDate(dueDate)}
             </span>
           </div>
           <div className="flex items-center gap-2 text-gray-500">
-            <span>📊</span>
+            <BarChart3 className="w-4 h-4" />
             <span>Max Score: {assignment.max_score || 100}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-500">
-            <span>📁</span>
+            <FolderOpen className="w-4 h-4" />
             <span>Formats: {(assignment.allowed_formats || ['pdf', 'doc', 'txt']).join(', ')}</span>
           </div>
         </div>
@@ -154,8 +158,8 @@ const AssignmentCard = ({ assignment, index, onSubmit, onRefresh }) => {
               </div>
             </div>
             {evaluation.is_plagiarized && (
-              <div className="mt-2 p-2 bg-red-50 rounded-lg text-xs text-red-700">
-                ⚠️ Plagiarism detected ({evaluation.plagiarism_score}%)
+              <div className="mt-2 p-2 bg-red-50 rounded-lg text-xs text-red-700 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" /> Plagiarism detected ({evaluation.plagiarism_score}%)
               </div>
             )}
           </motion.div>
@@ -166,16 +170,16 @@ const AssignmentCard = ({ assignment, index, onSubmit, onRefresh }) => {
           {!isSubmitted && (
             <button
               onClick={onSubmit}
-              className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+              className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
-              📤 Submit
+              <Upload className="w-4 h-4" /> Submit
             </button>
           )}
           <button
             onClick={() => navigate(`/assignment/${assignment.id}`)}
-            className={`${isSubmitted ? 'flex-1' : ''} py-2.5 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors`}
+            className={`${isSubmitted ? 'flex-1' : ''} py-2.5 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2`}
           >
-            {isSubmitted ? '📊 View Details' : '👁️ View'}
+            {isSubmitted ? <><BarChart3 className="w-4 h-4" /> View Details</> : <><Eye className="w-4 h-4" /> View</>}
           </button>
         </div>
       </div>

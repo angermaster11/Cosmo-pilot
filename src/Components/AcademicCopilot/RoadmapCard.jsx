@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Flame } from "lucide-react";
 
 const RoadmapCard = ({ roadmap }) => {
   const navigate = useNavigate();
@@ -38,8 +39,8 @@ const RoadmapCard = ({ roadmap }) => {
         <p className="text-xs mt-1">{progress}% Completed</p>
         
         {roadmap.current_streak > 0 && (
-          <p className="text-xs mt-1 text-orange-600">
-            🔥 {roadmap.current_streak} day streak
+          <p className="text-xs mt-1 text-orange-600 flex items-center gap-1">
+            <Flame className="w-3 h-3" /> {roadmap.current_streak} day streak
           </p>
         )}
       </div>

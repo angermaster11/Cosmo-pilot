@@ -7,6 +7,7 @@ import { fetchRoadmapDetails, toggleTaskCompletion, recordDailyCheckIn } from ".
 import ProgressCharts, { CircularProgress, XPProgressBar, TaskPieChart } from "./ProgressCharts";
 import StreakCard from "./StreakCard";
 import Achievements from "./Achievements";
+import { CheckCircle, RefreshCw, Clock as HourglassIcon, Loader, Check, Rocket, Flame, Target as TargetIcon, AlertCircle, Calendar, BarChart3, Flag, Trophy, Zap } from "lucide-react";
 
 // Modern Milestone Component with Optimistic Updates
 const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
@@ -50,9 +51,9 @@ const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
   };
 
   const statusConfig = {
-    completed: { color: "bg-green-500", text: "Completed", icon: "✅" },
-    in_progress: { color: "bg-yellow-500", text: "In Progress", icon: "🔄" },
-    pending: { color: "bg-gray-400", text: "Pending", icon: "⏳" },
+    completed: { color: "bg-green-500", text: "Completed", Icon: CheckCircle },
+    in_progress: { color: "bg-yellow-500", text: "In Progress", Icon: RefreshCw },
+    pending: { color: "bg-gray-400", text: "Pending", Icon: HourglassIcon },
   };
 
   const status = progress === 100 ? "completed" : progress > 0 ? "in_progress" : "pending";
@@ -73,8 +74,8 @@ const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl ${config.color} flex items-center justify-center text-2xl text-white shadow-lg`}>
-              {config.icon}
+            <div className={`w-12 h-12 rounded-xl ${config.color} flex items-center justify-center text-white shadow-lg`}>
+              <config.Icon className="w-6 h-6" />
             </div>
             <div>
               <h3 className="font-bold text-gray-800 text-lg">{milestone.name}</h3>
@@ -164,7 +165,7 @@ const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
                             transition={{ duration: 0.5, repeat: Infinity }}
                             className="text-xs"
                           >
-                            ⏳
+                            <Loader className="w-3 h-3" />
                           </motion.span>
                         ) : task.completed ? (
                           <motion.span
@@ -172,7 +173,7 @@ const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
                             animate={{ scale: 1 }}
                             className="text-sm"
                           >
-                            ✓
+                            <Check className="w-4 h-4" />
                           </motion.span>
                         ) : null}
                       </motion.div>
@@ -185,8 +186,8 @@ const MilestoneCard = ({ milestone, index, onTaskToggle, onTaskComplete }) => {
                         <p className="text-xs text-gray-500 mt-1">{task.description}</p>
                       )}
                       {task.estimated_hours && (
-                        <span className="inline-block mt-2 px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs rounded-full">
-                          ⏱️ {task.estimated_hours}h estimated
+                        <span className="inline-flex items-center gap-1 mt-2 px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs rounded-full">
+                          <HourglassIcon className="w-3 h-3" /> {task.estimated_hours}h estimated
                         </span>
                       )}
                     </div>
@@ -231,10 +232,10 @@ const DailyCheckIn = ({ roadmapId, hasCheckedIn, onCheckIn }) => {
         className="bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl p-6 text-white"
       >
         <div className="flex items-center gap-4">
-          <div className="text-5xl">✅</div>
+          <CheckCircle className="w-12 h-12" />
           <div>
             <h3 className="text-xl font-bold">You're on track today!</h3>
-            <p className="text-white/80">Keep up the great work! 🚀</p>
+            <p className="text-white/80 flex items-center gap-1">Keep up the great work! <Rocket className="w-4 h-4" /></p>
           </div>
         </div>
       </motion.div>
@@ -248,7 +249,7 @@ const DailyCheckIn = ({ roadmapId, hasCheckedIn, onCheckIn }) => {
       className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white"
     >
       <h3 className="text-xl font-bold mb-2">Daily Check-in</h3>
-      <p className="text-white/80 mb-4">Check in to maintain your streak! 🔥</p>
+      <p className="text-white/80 mb-4 flex items-center gap-1">Check in to maintain your streak! <Flame className="w-4 h-4" /></p>
       <input
         type="text"
         placeholder="How are you feeling today? (optional)"
@@ -261,9 +262,9 @@ const DailyCheckIn = ({ roadmapId, hasCheckedIn, onCheckIn }) => {
         whileTap={{ scale: 0.98 }}
         onClick={handleCheckIn}
         disabled={checking}
-        className="w-full py-3 bg-white text-indigo-600 rounded-lg font-bold hover:bg-gray-100 transition disabled:opacity-50"
+        className="w-full py-3 bg-white text-indigo-600 rounded-lg font-bold hover:bg-gray-100 transition disabled:opacity-50 flex items-center justify-center gap-2"
       >
-        {checking ? "Checking in..." : "Check In Now! 🎯"}
+        {checking ? "Checking in..." : <><TargetIcon className="w-4 h-4" /> Check In Now!</>}
       </motion.button>
     </motion.div>
   );
@@ -322,7 +323,7 @@ const RoadmapDetails = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <div className="text-8xl mb-6">😕</div>
+          <AlertCircle className="w-20 h-20 text-slate-400 mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             {error || "Roadmap not found"}
           </h2>
@@ -360,10 +361,10 @@ const RoadmapDetails = () => {
   const level = Math.floor(xp / 500) + 1;
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: "📊" },
-    { id: "milestones", label: "Milestones", icon: "🎯" },
-    { id: "analytics", label: "Analytics", icon: "📈" },
-    { id: "achievements", label: "Achievements", icon: "🏆" },
+    { id: "overview", label: "Overview", Icon: BarChart3 },
+    { id: "milestones", label: "Milestones", Icon: Flag },
+    { id: "analytics", label: "Analytics", Icon: TargetIcon },
+    { id: "achievements", label: "Achievements", Icon: Trophy },
   ];
 
   const today = new Date().toISOString().split("T")[0];
@@ -392,14 +393,14 @@ const RoadmapDetails = () => {
               <h1 className="text-3xl font-black text-gray-900">{roadmap.title}</h1>
               <p className="text-gray-500 mt-1">{roadmap.description}</p>
               <div className="flex flex-wrap gap-3 mt-3">
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
-                  📅 {roadmap.duration_days} days
+                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> {roadmap.duration_days} days
                 </span>
-                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                  🎯 {roadmap.difficulty}
+                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium flex items-center gap-1">
+                  <TargetIcon className="w-3 h-3" /> {roadmap.difficulty}
                 </span>
-                <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-                  🔥 {roadmap.current_streak || 0} day streak
+                <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium flex items-center gap-1">
+                  <Flame className="w-3 h-3" /> {roadmap.current_streak || 0} day streak
                 </span>
                 {roadmap.created_at && (
                   <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
@@ -429,7 +430,7 @@ const RoadmapDetails = () => {
                   : "bg-white text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <span>{tab.icon}</span>
+              <tab.Icon className="w-4 h-4" />
               {tab.label}
             </motion.button>
           ))}
@@ -452,8 +453,8 @@ const RoadmapDetails = () => {
                   className="bg-white rounded-2xl p-5 shadow-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl">
-                      ✅
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
                       <p className="text-2xl font-black text-gray-800">{completedTasks}</p>
@@ -467,8 +468,8 @@ const RoadmapDetails = () => {
                   className="bg-white rounded-2xl p-5 shadow-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center text-2xl">
-                      ⏳
+                    <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                      <HourglassIcon className="w-6 h-6 text-yellow-600" />
                     </div>
                     <div>
                       <p className="text-2xl font-black text-gray-800">{inProgressTasks}</p>
@@ -482,8 +483,8 @@ const RoadmapDetails = () => {
                   className="bg-white rounded-2xl p-5 shadow-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">
-                      📚
+                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <Flag className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
                       <p className="text-2xl font-black text-gray-800">{milestones.length}</p>
@@ -497,8 +498,8 @@ const RoadmapDetails = () => {
                   className="bg-white rounded-2xl p-5 shadow-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-2xl">
-                      ⚡
+                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                      <Zap className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
                       <p className="text-2xl font-black text-gray-800">{xp}</p>
